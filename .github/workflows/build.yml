@@ -23,9 +23,8 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Fix Gradle Files (Auto-Fix)
+      - name: Setup Gradle Wrapper
         run: |
-          # جلب ملفات Gradle الجاهزة
           mkdir -p gradle/wrapper
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew -o gradlew
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew.bat -o gradlew.bat
@@ -33,71 +32,15 @@ jobs:
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
           chmod +x gradlew
 
-          # إصلاح ملف الإضافة الداخلي ليتوافق مع أندرويد
-          cat > ArabicProvider/build.gradle.kts << 'EOF'
-          plugins {
-              id("com.android.library")
-              id("org.jetbrains.kotlin.android")
-          }
-
-          android {
-              namespace = "com.re3arabi.provider"
-              compileSdk = 34
-
-              defaultConfig {
-                  minSdk = 21
-              }
-
-              compileOptions {
-                  sourceCompatibility = JavaVersion.VERSION_17
-                  targetCompatibility = JavaVersion.VERSION_17
-              }
-              kotlinOptions {
-                  jvmTarget = "17"
-              }
-          }
-
-          dependencies {
-              compileOnly("com.github.recloudstream:cloudstream:master-SNAPSHOT")
-              implementation("org.jsoup:jsoup:1.16.1")
-              implementation("com.squareup.okhttp3:okhttp:4.11.0")
-              implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
-          }
-          EOF
-
-          # إصلاح ملف البناء الرئيسي
-          cat > build.gradle.kts << 'EOF'
-          buildscript {
-              repositories {
-                  google()
-                  mavenCentral()
-                  maven("https://jitpack.io")
-              }
-              dependencies {
-                  classpath("com.android.tools.build:gradle:8.1.4")
-                  classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
-              }
-          }
-
-          allprojects {
-              repositories {
-                  google()
-                  mavenCentral()
-                  maven("https://jitpack.io")
-              }
-          }
-          EOF
-
       - name: Build APK
         run: ./gradlew :ArabicProvider:assembleRelease
 
-      - name: Find and Prepare APK
+      - name: Prepare Artifacts
         run: |
           mkdir -p artifacts
           find . -name "*.apk" -exec cp {} artifacts/ \;
-
-      - name: Generate plugins.json
-        run: |
+          
+          # إنشاء ملف plugins.json
           echo '{
               "name": "Re-3arabi CloudStream Repo",
               "description": "مستودع إضافات عربية",
@@ -115,6 +58,8 @@ jobs:
                   }
               ]
           }' > artifacts/plugins.json
+          
+          ls -la artifacts/
 
       - name: Deploy to build branch
         uses: peaceiris/actions-gh-pages@v3
