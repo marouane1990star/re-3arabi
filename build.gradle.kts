@@ -18,24 +18,12 @@ allprojects {
     }
 }
 
-// الأكواد التالية هي المسؤولة عن بناء الإضافة وإنشاء ملف plugins.json
-tasks.register("make") {
-    dependsOn(":ArabicProvider:assembleRelease")
-    doLast {
-        copy {
-            from("ArabicProvider/build/outputs/apk/release")
-            into("$buildDir/plugins")
-        }
-    }
-}
-
+// هذا الجزء هو الذي يصنع ملف plugins.json
 tasks.register("makePluginsJson") {
-    dependsOn("make")
     doLast {
-        val pluginsDir = file("$buildDir/plugins")
-        val plugins = pluginsDir.listFiles()?.filter { it.extension == "apk" }?.map {
+        val plugins = listOf(
             mapOf(
-                "url" to it.name,
+                "url" to "ArabicProvider.apk",
                 "version" to 1,
                 "description" to "Arabic Provider",
                 "name" to "عربي",
@@ -44,16 +32,14 @@ tasks.register("makePluginsJson") {
                 "repositoryUrl" to "https://github.com/marouane1990star/re-3arabi",
                 "language" to "ar"
             )
-        } ?: emptyList()
-
+        )
         val json = mapOf(
             "name" to "Re-3arabi CloudStream Repo",
-            "description" to "مستودع إضافات عربية لتطبيق CloudStream",
+            "description" to "مستودع إضافات عربية",
             "manifestVersion" to 1,
             "plugins" to plugins
         )
-
-        val jsonFile = file("$buildDir/plugins/plugins.json")
-        jsonFile.writeText(com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(json))
+        val mapper = com.fasterxml.jackson.databind.ObjectMapper()
+        file("plugins.json").writeText(mapper.writeValueAsString(json))
     }
 }
