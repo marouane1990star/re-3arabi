@@ -1,0 +1,8 @@
+{
+    "name": "Re-3arabi CloudStream Repo",
+    "description": "مستودع إضافات عربية لتطبيق CloudStream",
+    "manifestVersion": 1,
+    "pluginLists": [
+        "https://raw.githubusercontent.com/marouane1990star/re-3arabi/build/plugins.json"
+    ]
+}
