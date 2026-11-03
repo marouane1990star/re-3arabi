@@ -29,7 +29,7 @@ jobs:
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew -o gradlew
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew.bat -o gradlew.bat
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
-          curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.4-bin.zip" > gradle/wrapper/gradle-wrapper.properties
           chmod +x gradlew
 
       - name: Build Plugins
