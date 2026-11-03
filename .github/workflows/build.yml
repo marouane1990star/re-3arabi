@@ -32,14 +32,17 @@ jobs:
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
           chmod +x gradlew
 
-      - name: Build Plugins
-        run: ./gradlew make makePluginsJson
+      - name: Build APK
+        run: ./gradlew :ArabicProvider:assembleRelease
 
-      - name: Copy APKs and plugins.json
+      - name: Generate plugins.json
+        run: ./gradlew makePluginsJson
+
+      - name: Prepare Artifacts
         run: |
           mkdir -p artifacts
           find . -name "*.apk" -exec cp {} artifacts/ \;
-          find . -name "plugins.json" -exec cp {} artifacts/ \;
+          cp plugins.json artifacts/ || true
           ls -la artifacts/
 
       - name: Deploy to build branch
