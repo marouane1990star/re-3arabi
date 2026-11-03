@@ -32,33 +32,14 @@ jobs:
           curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
           chmod +x gradlew
 
-      - name: Build APK
-        run: ./gradlew :ArabicProvider:assembleRelease
+      - name: Build Plugins
+        run: ./gradlew make makePluginsJson
 
-      - name: Prepare Artifacts
+      - name: Copy APKs and plugins.json
         run: |
           mkdir -p artifacts
           find . -name "*.apk" -exec cp {} artifacts/ \;
-          
-          # إنشاء ملف plugins.json
-          echo '{
-              "name": "Re-3arabi CloudStream Repo",
-              "description": "مستودع إضافات عربية",
-              "manifestVersion": 1,
-              "plugins": [
-                  {
-                      "url": "ArabicProvider-release.apk",
-                      "version": 1,
-                      "description": "Arabic Provider",
-                      "name": "عربي",
-                      "internalName": "ArabicProvider",
-                      "authors": ["Marouane"],
-                      "repositoryUrl": "https://github.com/marouane1990star/re-3arabi",
-                      "language": "ar"
-                  }
-              ]
-          }' > artifacts/plugins.json
-          
+          find . -name "plugins.json" -exec cp {} artifacts/ \;
           ls -la artifacts/
 
       - name: Deploy to build branch
