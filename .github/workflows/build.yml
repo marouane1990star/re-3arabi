@@ -23,8 +23,14 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew || true
+      - name: Setup Gradle Wrapper
+        run: |
+          mkdir -p gradle/wrapper
+          curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew -o gradlew
+          curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradlew.bat -o gradlew.bat
+          curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+          curl -sL https://raw.githubusercontent.com/recloudstream/cloudstream/master/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
+          chmod +x gradlew
 
       - name: Build Plugins
         run: ./gradlew make makePluginsJson
