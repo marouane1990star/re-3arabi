@@ -18,28 +18,32 @@ allprojects {
     }
 }
 
-// هذا الجزء هو الذي يصنع ملف plugins.json
+tasks.register("make") {
+    dependsOn(":ArabicProvider:assembleRelease")
+}
+
 tasks.register("makePluginsJson") {
+    dependsOn("make")
     doLast {
-        val plugins = listOf(
-            mapOf(
-                "url" to "ArabicProvider.apk",
-                "version" to 1,
-                "description" to "Arabic Provider",
-                "name" to "عربي",
-                "internalName" to "ArabicProvider",
-                "authors" to listOf("Marouane"),
-                "repositoryUrl" to "https://github.com/marouane1990star/re-3arabi",
-                "language" to "ar"
-            )
-        )
-        val json = mapOf(
-            "name" to "Re-3arabi CloudStream Repo",
-            "description" to "مستودع إضافات عربية",
-            "manifestVersion" to 1,
-            "plugins" to plugins
-        )
-        val mapper = com.fasterxml.jackson.databind.ObjectMapper()
-        file("plugins.json").writeText(mapper.writeValueAsString(json))
+        val json = """
+        {
+            "name": "Re-3arabi CloudStream Repo",
+            "description": "مستودع إضافات عربية",
+            "manifestVersion": 1,
+            "plugins": [
+                {
+                    "url": "ArabicProvider-release.apk",
+                    "version": 1,
+                    "description": "Arabic Provider",
+                    "name": "عربي",
+                    "internalName": "ArabicProvider",
+                    "authors": ["Marouane"],
+                    "repositoryUrl": "https://github.com/marouane1990star/re-3arabi",
+                    "language": "ar"
+                }
+            ]
+        }
+        """.trimIndent()
+        file("plugins.json").writeText(json)
     }
 }
