@@ -17,6 +17,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += "-Xskip-metadata-version-check" // <--- السطر السحري
     }
 }
 
