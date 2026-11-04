@@ -1,0 +1,17 @@
+{
+    "name": "Re-3arabi CloudStream Repo",
+    "description": "مستودع إضافات عربية",
+    "manifestVersion": 1,
+    "plugins": [
+        {
+            "url": "ArabicProvider-release.apk",
+            "version": 1,
+            "description": "Arabic Provider",
+            "name": "عربي",
+            "internalName": "ArabicProvider",
+            "authors": ["Marouane"],
+            "repositoryUrl": "https://github.com/marouane1990star/re-3arabi",
+            "language": "ar"
+        }
+    ]
+}
