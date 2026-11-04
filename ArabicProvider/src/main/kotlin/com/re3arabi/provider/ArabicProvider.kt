@@ -3,7 +3,7 @@ package com.re3arabi.provider
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 
-class ArabicProvider : MainApi() {  // <--- لاحظ هنا MainApi وليس MainAPI
+class ArabicProvider : MainAPI() { // <--- لاحظ حرف I كبير هنا
     override var mainUrl = "https://example.com"
     override var name = "عربي"
     override var lang = "ar"
